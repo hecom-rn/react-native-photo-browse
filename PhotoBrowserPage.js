@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CameraRoll from '@react-native-community/cameraroll';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-root-toast';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -239,7 +239,7 @@ export default class extends React.PureComponent {
             onProgressNum: 0,
             showToast: this.props.successDownloadText
         });
-        CameraRoll.saveToCameraRoll(path, 'photo').then(() => {
+        CameraRoll.saveAsset(path, { type: 'photo' }).then(() => {
             RNFS.unlink(path);
         });
     };
