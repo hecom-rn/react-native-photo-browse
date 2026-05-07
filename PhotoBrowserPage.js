@@ -2,8 +2,6 @@ import React from 'react';
 import { ActivityIndicator, Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { ActivityIndicator, Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RNFS from 'react-native-fs';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Circle } from 'react-native-progress';
