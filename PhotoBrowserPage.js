@@ -6,6 +6,7 @@ import RNFS from 'react-native-fs';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Circle } from 'react-native-progress';
 import Toast from 'react-native-root-toast';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default class extends React.PureComponent {
     static propTypes = {
@@ -78,6 +79,7 @@ export default class extends React.PureComponent {
                 onRequestClose={onClose}
                 supportedOrientations={supportedOrientations}
             >
+                <SafeAreaProvider>
                 <View style={styles.layout}>
                     <ImageViewer
                         index={this.currentIndex}
@@ -100,6 +102,7 @@ export default class extends React.PureComponent {
                     {this.state.showToast !== '' && this._renderToast()}
                     {this.props.canDownload && this.state.isDownloading && this._renderCannotTouch()}
                 </View>
+                </SafeAreaProvider>
             </Modal>
         );
     }
@@ -200,11 +203,12 @@ export default class extends React.PureComponent {
     _renderDownloadButton = () => {
         const {clickdButtonIcon, unClickdButtonIcon} = this.props;
         return (
-            <TouchableOpacity style={styles.downloadButton} onPress={() => this._downLoadFile()}>
-                <View>
-                    {this.state.isDownloading ? unClickdButtonIcon : clickdButtonIcon}
-                </View>
-            </TouchableOpacity>
+            <DownloadButton
+                clickdButtonIcon={clickdButtonIcon}
+                unClickdButtonIcon={unClickdButtonIcon}
+                onPress={() => this._downLoadFile()}
+                isDownloading={this.state.isDownloading}
+            />
         );
     };
 
@@ -299,6 +303,24 @@ export default class extends React.PureComponent {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
+/**
+ * 下载按钮：bottom 需叠加底部安全区（Android 虚拟导航条 / iOS Home Indicator），
+ * 否则固定导航条（三键导航）展示时按钮会被系统栏遮住一部分。
+ */
+function DownloadButton({clickdButtonIcon, unClickdButtonIcon, onPress, isDownloading}) {
+    const {bottom} = useSafeAreaInsets();
+    return (
+        <TouchableOpacity
+            style={[styles.downloadButton, {bottom: styles.downloadButton.bottom + bottom}]}
+            onPress={onPress}
+        >
+            <View>
+                {isDownloading ? unClickdButtonIcon : clickdButtonIcon}
+            </View>
+        </TouchableOpacity>
+    );
+}
 
 const styles = StyleSheet.create({
     layout: {flex: 1, backgroundColor: 'black'},
